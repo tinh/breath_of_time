@@ -76,6 +76,7 @@ class MapGen(object):
             except OSError:
                 print UNABLE_WRITING % getcwd()
                 return
+            
         rep_map = listdir(DIR_MAP)
         map_nb = 0
 
