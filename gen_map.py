@@ -35,9 +35,9 @@ class MapGen(object):
         self.size = None
         self.gen_map = None
         self.view_size = {
-        'length':640,
+        'length': 640,
         'width': 480,
-        'ratio':4/3
+        'ratio': 4/3
         }
         self.elem_map = {
         'non_access_zone': 'x',
