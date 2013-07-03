@@ -3,9 +3,9 @@ breath_of_time RPG's game
 
 Three classes caracter
 ----------------------
-* -Assassin
-* -Warrior
-* -Warlock
+* Assassin
+* Warrior
+* Warlock
 
 Four ages
 ---------
@@ -17,4 +17,3 @@ Four ages
     --> Kali (India: goddess of death, destructive and creative)
 * Pyana's era (end's time)
     --> Pana (Inuit: spirit who drive souls before their reincarnation) to introduce idea of time travel
-
