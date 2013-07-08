@@ -17,7 +17,8 @@ NAME_MAP =          '%s_%d.map'
 MIN_SIZE_MAP =      8
 
 class MapGen(object):
-    """create map by some criteria:
+    """
+    create map by some criteria:
     size, global form, rooms, gates, etc.
     Objects use to define map:
     x   _________ non_access_zone
@@ -28,14 +29,15 @@ class MapGen(object):
     o   _________ tree
    ' '  _________ ground
     H   _________ gate
-    ~   _________ water"""
+    ~   _________ water
+    """
 
     def __init__(self):
         self.map_file = None
         self.map_fd = None
         self.design = None
         self.size = None
-        self.gen_map = None
+        self.func_map = None
         self.elem_map = {
         'Dzone': 'x',
         'wall_right_side': '/',
@@ -60,12 +62,14 @@ class MapGen(object):
         }
 
     def create_file_map(self, design, size):
-        """method to create/read maps rep.
-        allow MapGen class to create coherent map files"""
+        """
+        method to create/read maps rep.
+        allow MapGen class to create coherent map files
+        """
 
         if self.design_map.has_key(design):
             self.design = design
-            self.gen_map = self.design_map[design]
+            self.func_map = self.design_map[design]
         else:
             print 'unknown map design, exiting'
             return
@@ -90,33 +94,43 @@ class MapGen(object):
         self.map_fd = open(self.map_file, 'w')
         self.map_fd.write("%s file map" % self.design)
         self.gen_empty_map(size)
-        self.gen_map()
+        self.func_map()
 
     def gen_empty_map(self, size):
-        length, width = self.scale_map(size)
+        """
+        will build a rectangle filled with Dzone carac
+        to delimite the surface of the current map
+        """
+        def scale_map(size):
+            """
+            choose map scale between scale options definning in __init__
+            8*8 - 20*20 max. (small) --> 400 blocks,
+            21*21 - 50*50 max (medium) --> 2500 blocks,
+            51*51 - 70*70 max. (big) --> 4900 blocks
+            """
+
+            if size == 'small':
+                return randint(MIN_SIZE_MAP, self.scale['small']), randint(MIN_SIZE_MAP, self.scale['small'])
+            elif size == 'medium':
+                return randint(self.scale['small'] + 1, self.scale['medium']), randint(self.scale['small'] + 1, self.scale['medium'])
+            elif size == 'big':
+                return randint(self.scale['medium'] + 1, self.scale['big']), randint(self.scale['medium'] + 1, self.scale['big'])
+            else:
+                return scale_map('medium')
+
+        length, width = scale_map(size)
         self.map_fd.write("\n========\n\n")
         # debug
         self.map_fd.write(str(length) + " * " + str(width) + "\n\n")
-        for i in range(width):
-            self.map_fd.write(self.elem_map['Dzone'] * length + '\n')
+        
+        buf_map = [self.elem_map['Dzone'] * length for i in range(width)]
 
-    def scale_map(self, size):
-        """choose map scale between scale options definning in __init__
-        8*8 - 20*20 max. (small) --> 400 blocks,
-        21*21 - 50*50 max (medium) --> 2500 blocks,
-        51*51 - 70*70 max. (big) --> 4900 blocks"""
+        ### debug
+        print buf_map[1].__len__()
+        print buf_map[2].__len__() 
+        ### debug
 
-        if size == 'small':
-            return randint(MIN_SIZE_MAP, self.scale['small']), randint(MIN_SIZE_MAP, self.scale['small'])
-        elif size == 'medium':
-            return randint(self.scale['small'] + 1, self.scale['medium']), randint(self.scale['small'] + 1, self.scale['medium'])
-        elif size == 'big':
-            return randint(self.scale['medium'] + 1, self.scale['big']), randint(self.scale['medium'] + 1, self.scale['big'])
-        else:
-            return self.scale_map('medium')
-        
-        
-        
+
     def forest_design(self):
         print "forest_design method"
 
