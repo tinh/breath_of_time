@@ -48,9 +48,5 @@ La capitale est alors devenue l’ombre d’elle-même. Aux mains de la sociét�
 
 
 
-
-
-
-
-
-Phase d’exploration :
+### Phase d’exploration :
+to continue...
