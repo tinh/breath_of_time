@@ -19,12 +19,14 @@ try:
 except IndexError:
     design_map_keys = inst.design_show().keys()
     while True:
-        design = raw_input("'forest'\n\
+        try:
+            design = raw_input("'forest'\n\
 'snow'\n\
 'desert'\n\
 'dungeon'\n\
 >>> ")
+        except EOFError:
+            print "\nBye"
+            exit()
         if design in design_map_keys:
-            break
-
-inst.create_file_map(design, size)
+            inst.create_file_map(design, size)

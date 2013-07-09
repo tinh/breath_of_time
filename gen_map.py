@@ -93,7 +93,8 @@ class MapGen(object):
         self.map_file = DIR_MAP + NAME_MAP % (self.design, map_nb)
         self.map_fd = open(self.map_file, 'w')
         self.map_fd.write("%s file map" % self.design)
-        self.gen_empty_map(size)
+        buf_map = self.gen_empty_map(size)
+        print buf_map
         self.func_map()
 
     def gen_empty_map(self, size):
@@ -101,6 +102,7 @@ class MapGen(object):
         will build a rectangle filled with Dzone carac
         to delimite the surface of the current map
         """
+
         def scale_map(size):
             """
             choose map scale between scale options definning in __init__
@@ -119,17 +121,9 @@ class MapGen(object):
                 return scale_map('medium')
 
         length, width = scale_map(size)
-        self.map_fd.write("\n========\n\n")
         # debug
         self.map_fd.write(str(length) + " * " + str(width) + "\n\n")
-        
-        buf_map = [self.elem_map['Dzone'] * length for i in range(width)]
-
-        ### debug
-        print buf_map[1].__len__()
-        print buf_map[2].__len__() 
-        ### debug
-
+        return [self.elem_map['Dzone'] * length for i in range(width)]
 
     def forest_design(self):
         print "forest_design method"
