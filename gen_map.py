@@ -97,19 +97,6 @@ class MapGen(object):
         self.map_fd = open(self.map_file, 'w')
         self.map_fd.write("%s file map" % self.design)
         buf_map = self.gen_empty_map(size)
-        i = 0
-        wall = 0
-        ground = 0
-        for j in buf_map:
-            for k in buf_map[i]:
-                if k == 'x':
-                    wall += 1
-                else:
-                    ground += 1
-            print buf_map[i]
-            i += 1
-
-        print wall, ground, self.ground_aera
         self.func_map()
 
     def gen_empty_map(self, size):
