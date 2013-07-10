@@ -13,6 +13,7 @@ from sys import argv
 inst = MapGen()
 
 size = 10
+
 try:
     design = argv[1]
     size = argv[2]
@@ -25,8 +26,8 @@ except IndexError:
 'desert'\n\
 'dungeon'\n\
 >>> ")
-        except EOFError:
+        except (EOFError, KeyboardInterrupt):
             print "\nBye"
             exit()
         if design in design_map_keys:
-            inst.create_file_map(design, size)
+            inst.create_file_map(design, 'small')

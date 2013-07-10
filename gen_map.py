@@ -38,6 +38,8 @@ class MapGen(object):
         self.design = None
         self.size = None
         self.func_map = None
+        self.gd_area_pc = 0
+        self.ground_aera = 0
         self.elem_map = {
         'Dzone': 'x',
         'wall_right_side': '/',
@@ -50,6 +52,7 @@ class MapGen(object):
         'water': '~'
         }
         self.design_map = {
+        'lowland': getattr(self, 'lowland_design'),
         'forest': getattr(self, 'forest_design'),
         'dungeon': getattr(self, 'dungeon_design'),
         'desert': getattr(self, 'desert_design'),
@@ -94,7 +97,19 @@ class MapGen(object):
         self.map_fd = open(self.map_file, 'w')
         self.map_fd.write("%s file map" % self.design)
         buf_map = self.gen_empty_map(size)
-        print buf_map
+        i = 0
+        wall = 0
+        ground = 0
+        for j in buf_map:
+            for k in buf_map[i]:
+                if k == 'x':
+                    wall += 1
+                else:
+                    ground += 1
+            print buf_map[i]
+            i += 1
+
+        print wall, ground, self.ground_aera
         self.func_map()
 
     def gen_empty_map(self, size):
@@ -112,30 +127,65 @@ class MapGen(object):
             """
 
             if size == 'small':
-                return randint(MIN_SIZE_MAP, self.scale['small']), randint(MIN_SIZE_MAP, self.scale['small'])
+                length = randint(MIN_SIZE_MAP, self.scale['small'])
+                width =  randint(MIN_SIZE_MAP, self.scale['small'])
             elif size == 'medium':
-                return randint(self.scale['small'] + 1, self.scale['medium']), randint(self.scale['small'] + 1, self.scale['medium'])
+                length = randint(self.scale['small'] + 1, self.scale['medium']) 
+                width = randint(self.scale['small'] + 1, self.scale['medium'])
             elif size == 'big':
-                return randint(self.scale['medium'] + 1, self.scale['big']), randint(self.scale['medium'] + 1, self.scale['big'])
+                length = randint(self.scale['medium'] + 1, self.scale['big'])
+                width = randint(self.scale['medium'] + 1, self.scale['big'])
             else:
                 return scale_map('medium')
 
-        length, width = scale_map(size)
+            return length, width, length*width - (length + width) * 2 + 4
+
+        length, width, self.ground_aera = scale_map(size)
+        print "length:", length, "\nwidth:", width, "\nground_aera:", self.ground_aera
+        
         # debug
         self.map_fd.write(str(length) + " * " + str(width) + "\n\n")
-        return [self.elem_map['Dzone'] * length for i in range(width)]
+        #
+
+        buf_map = list()
+        for i in range(width):
+            if not i or i == width - 1:
+                buf_map.append(self.elem_map['Dzone']*length)
+            else:
+                buf_map.append(self.elem_map['Dzone'] + self.elem_map['ground']\
+                    *(length - 2) + self.elem_map['Dzone'])
+            
+        return buf_map
+
+    def lowland_design(self):
+        """forest_design method"""
+
+        self.gd_area_pc = 80
+        pass
 
     def forest_design(self):
-        print "forest_design method"
+        """dungeon_design"""
+
+        self.gd_area_pc = 20
+        pass
 
     def dungeon_design(self):
-        print "dungeon_design method"
-        
+        """desert_design method"""
+
+        self.gd_area_pc = 95
+        pass
+
     def desert_design(self):
-        print "desert_design method"
-        
+        """snow_design"""
+
+        self.gd_area_pc = 95
+        pass
+
     def snow_design(self):
-        print "snow_design method"
+        """snow_design"""
+
+        self.gd_area_pc = 95
+        pass
 
     def design_show(self):
         return self.design_map
